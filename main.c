@@ -9,7 +9,7 @@
 #define ERROR_JOIN_THREAD   -12
 #define SUCCESS        0
 
-void * helloWorld(FILE * file) {
+void * file_read_th(FILE * file) {
     char str[1024];
     while (fscanf(file, "%s", str) != EOF)
     {
@@ -32,9 +32,9 @@ int main() {
     FILE *f = fopen("file.txt", "r");
     pthread_t thread;
     int status;
-    // void * status_addr;
 
-    status = pthread_create(&thread, NULL, helloWorld, f);
+
+    status = pthread_create(&thread, NULL, file_read_th, f);
     if (status != SUCCESS) {
         printf("main error: can't create thread, status = %d\n", status);
         exit(ERROR_CREATE_THREAD);
