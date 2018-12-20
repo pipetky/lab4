@@ -90,11 +90,12 @@ int main() {
     printf("joined\n");
     if((fcntl (fd, F_GETFL, NULL)) < 0 )
     {
-        printf("файл закрыт\n");
+        printf("file closed\n");
 
     } else
     {
-        printf("файл не был закрыт, закрываю файл...\n");
+        printf("\n"
+               "the file was not closed, closing the file...\n");
         close(fd);
     }
 
