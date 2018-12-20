@@ -12,6 +12,32 @@
 
 void * file_read_th(int *fd) {
 
+    int pid = getpid();
+
+    // schedule policy
+    int policy = sched_getscheduler(pid);
+
+    // current priority
+    int priority = getpriority(PRIO_PROCESS, pid);
+
+    int max_priority = sched_get_priority_max(policy);
+    int min_priority = sched_get_priority_min(policy);
+
+    switch (policy) {
+        case 0:
+            printf("Schedule class: %s\n", "SCHED_FIFO");
+            break;
+        case 1:
+            printf("Schedule class: %s\n", "SCHED_RR");
+            break;
+        case 2:
+            printf("Schedule class: %s\n", "SCHED_OTHER");
+            break;
+    }
+    printf("Current priority: %i\n", priority);
+    printf("Max priority: %i\n", max_priority);
+    printf("Min priority: %i\n", min_priority);
+
     ssize_t read_bytes;
     char buffer[BUFFER_SIZE+1];
     while ((read_bytes = read (*fd, buffer, BUFFER_SIZE)) > 0)
@@ -61,7 +87,17 @@ int main() {
         printf("main error: can't join thread, status = %d\n", status);
         exit(ERROR_JOIN_THREAD);
     }
+    printf("joined\n");
+    if((fcntl (fd, F_GETFL, NULL)) < 0 )
+    {
+        printf("файл закрыт\n");
 
-    printf("joined");
+    } else
+    {
+        printf("файл не был закрыт, закрываю файл...\n");
+        close(fd);
+    }
+
+
     return 0;
 }
